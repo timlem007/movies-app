@@ -1,0 +1,36 @@
+body {
+	background: #E5E5E5;
+
+	/* display: flex; */
+	/* justify-content: center; */
+}
+
+#root {
+	width: 1010px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background: #FFFFFF;
+	margin: 0px auto 0px auto;
+	padding: 0px 36px;
+}
+
+.pagination {
+	margin-bottom: 17px;
+	display: flex;
+	justify-content: center;
+}
+
+.ant-tabs-nav-wrap {
+	align-items: center;
+	justify-content: center;
+}
+
+/* .ant-tabs {
+	flex-basis: 938px;
+} */
+
+.ant-tabs-content-holder {
+	width: 938px;
+}

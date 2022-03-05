@@ -1,0 +1,128 @@
+.card-img {
+  /* display: flex;
+	flex-direction: column;
+	flex-basis: 183px;  */
+  max-width: 183px;
+  max-height: 281px;
+  /* min-width: 0px; */
+  /* background-size: 100%; */
+  object-fit: cover;
+}
+
+.card-img-error {
+  /* display: flex;
+	flex-direction: row;
+	flex-basis: 183px;  */
+  min-width: 183px;
+  padding: 0px;
+  text-align: center;
+}
+
+.ant-alert-message {
+  box-shadow: 0px 0px 6px -1px;
+  margin: 0px 20px 0px 20px;
+  text-align: center;
+}
+
+.card-info {
+  /* padding: 0px 20px 0px 20px; */
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-width: 0px;
+}
+
+.card-info__header {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 0px;
+  margin-bottom: 7px;
+  min-width: 0px;
+}
+
+.card-info__body {
+  display: flex;
+  margin: 0px 20px 7px 20px;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+}
+
+.info__rate {
+  flex-wrap: nowrap;
+  min-width: 0px;
+  max-width: 239px;
+  margin: auto auto 4px auto;
+}
+
+.ant-rate-star {
+	margin-right: 5px !important;
+}
+
+.info__overview {
+  overflow: hidden;
+  line-height: 22px;
+  size: 12px;
+  font-weight: 400;
+  color: #000000;
+  margin-bottom: 0px;
+  text-overflow: ellipsis;
+  /* white-space: nowrap;  */
+}
+
+.info__date {
+  line-height: 22px;
+  size: 12px;
+  font-weight: 400;
+  color: #827e7e;
+}
+
+.ant-tag {
+  display: flex;
+  height: 20px;
+  margin-bottom: 7px;
+  line-height: 14, 5px;
+  size: 12px;
+  font-weight: 400;
+  align-content: center;
+  justify-content: center;
+}
+
+.card-info__header__name {
+  padding: 0px 10px 0px 20px;
+  margin: 0px;
+  line-height: 28px;
+  size: 20px;
+  font-weight: 400;
+  color: #000000;
+}
+
+.card-info__header__stars {
+  margin: 12px 9px 0px 10px;
+  min-width: 30px;
+  min-height: 30px;
+  /* margin: 0px; */
+  margin-bottom: 0px;
+  line-height: 22px;
+  size: 12px;
+  font-weight: 400;
+  color: #000000;
+  border-radius: 50%;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.alert-error {
+  margin: 10px 0px 20px 0px;
+}
+
+/* .ant-rate-star {
+	width: 10px;
+	height: 10px;
+} */
+
+/* .ant-rate-star-full {
+	width: 10px;
+	height: 10px;
+} */

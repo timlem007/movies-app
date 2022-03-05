@@ -1,0 +1,45 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:react-hooks/recommended",
+        "plugin:jsx-a11y/recommended",
+        "plugin:import/recommended",
+        "prettier",
+        "airbnb"
+    ],
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react"
+    ],
+    "rules": {
+      "curly": ["error"],
+      "max-depth": ["warn", 4],
+      "id-length": ["warn", { "exceptions": ["i", "j"], "min": 2 }],
+      "no-lonely-if": ["error"],
+      "no-plusplus": ["error", {"allowForLoopAfterthoughts": true}],
+      "no-restricted-syntax": "off",
+      "class-methods-use-this": "off",
+      "jsx-a11y/href-no-hash": ["off"],
+      "jsx-a11y/anchor-is-valid": ["off"],
+      "jsx-a11y/label-has-associated-control": [ "error", {
+        "assert": "either"
+      }],
+      "react/state-in-constructor": ["off"],
+      "react/jsx-props-no-spreading": ["off"],
+      "react/static-property-placement": "off",
+      "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+      "react/jsx-uses-react": "error",   
+      "react/jsx-uses-vars": "error"
+    }
+}

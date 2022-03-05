@@ -1,0 +1,12 @@
+.search-form {
+	display: flex;
+	flex-direction: row;
+	flex-basis: 100%;
+	align-items: stretch;
+}
+
+.search-form {
+	display: flex;
+	flex-direction: column;
+	flex-basis: 100%;
+}
