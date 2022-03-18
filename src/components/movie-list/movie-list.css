@@ -8,6 +8,7 @@
 	padding: 0px 0px;
 	flex-basis: auto;
 	padding-top: 32px;
+	box-sizing: border-box;
 	justify-content: space-between;
 }
 
@@ -16,7 +17,7 @@
 	flex-direction: row;
 	/* width: 454px; */
 	height: 281px;
-	margin-bottom: 36px;
+	margin: 0px 2px 36px 2px;
 	flex-basis: 450px;
 	/* flex-grow: 50px; */
 	/* flex-shrink: ; */

@@ -170,6 +170,8 @@ export default class App extends Component {
         current={searchInfo.current}
         onChange={(page) => this.onChange(page)}
         total={searchInfo.total_result}
+        defaultPageSize={20}
+        pageSizeOptions={[20]}
       />
     ) : null;
     const ratedPagination = ratedPaginData ? (
@@ -178,7 +180,8 @@ export default class App extends Component {
         current={ratedInfo.current}
         onChange={(page) => this.onChangeRated(page)}
         total={ratedInfo.total_result}
-        pageSize={20}
+        defaultPageSize={20}
+        pageSizeOptions={[20]}
       />
     ) : null;
     return (
