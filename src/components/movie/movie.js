@@ -9,6 +9,16 @@ import {
 } from 'antd';
 
 function Movie({ element, loading, changeRated }) {
+  const ref = React.createRef();
+  // let blockHight;
+  // useEffect(() => {
+  //   const { current } = ref;
+  //   blockHight = current.offsetHeight;
+  //   // console.log(current.offsetHeight);
+  // }, []);
+
+  // console.log(blockHight);
+
   let date = element.release_date;
   let cardImage = <img className="card-img" alt="title" src={element.photo1} />;
 
@@ -26,6 +36,59 @@ function Movie({ element, loading, changeRated }) {
   if (element.stars >= 5 && element.stars < 7) elementStarsColor = '#E9D100';
   if (element.stars >= 7) elementStarsColor = '#66E900';
 
+  // const testElement = document.getElementsByClassName('info__overview');
+  // console.log(Array.prototype.slice.call(testElement));
+  // console.log(element.overview);
+  let result = '';
+  let string = '';
+  function updateText(width, higth, text = '') {
+    const newText = text.split(' ');
+    const elem = `${newText.shift()} `;
+
+    if (result.split('\n').length <= higth && text) {
+      if ((elem.length + string.length) < width) {
+        string += elem;
+        updateText(width, higth, newText.join(' '));
+      } else {
+        if (result.split('\n').length === higth || !text) {
+          result += `${string}...`;
+          return result;
+        }
+        result += `${string}\n`;
+        string = elem;
+        updateText(width, higth, newText.join(' '));
+      }
+    } else {
+      result += string;
+    }
+    return result;
+  }
+
+  // const updateText = (width, higth, text = '') => {
+  //   let string = '';
+  //   let result = '';
+  //   console.log(text);
+  //   const textInArray = text.split(' ');
+  //   // console.log(textInArray);
+  //   // textInArray.shift();
+  //   textInArray.forEach(() => {
+  //     // console.log(result.split('\n').length);
+  //     if (result.split('\n').length <= higth) {
+  //       if (string.length < width) {
+  //         string += `${textInArray.shift()} `;
+  //       } else {
+  //         string += '\n';
+  //         result += string;
+  //         string = `${textInArray.shift()} `;
+  //       }
+  //     }
+  //   });
+  //   console.log(textInArray);
+  //   return result;
+  // };
+
+  // console.log();
+  // console.log(ref.current.offsetHeight);
   const cardList = (
     <>
       {cardImage}
@@ -45,7 +108,12 @@ function Movie({ element, loading, changeRated }) {
           <Tag>#87d068</Tag>
           <Tag>#108ee9</Tag>
         </div>
-        <p className="card-info__body info__overview">{element.overview}</p>
+        <p
+          className="card-info__body info__overview"
+          ref={ref}
+        >
+          {updateText(35, 5, element.overview)}
+        </p>
         <Rate
           className="card-info__body info__rate"
           defaultValue={0}

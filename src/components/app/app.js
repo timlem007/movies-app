@@ -116,20 +116,21 @@ export default class App extends Component {
       };
     });
     await this.Info.postRatedMovies(id, value);
-    await this.ratedMoviesList();
+    // await this.ratedMoviesList();
   };
 
   ratedMoviesList = async (page = 1) => {
-    let list;
-    let result;
+    // let list;
+    // let result;
     await this.Info.getRatedMovies(page).then(async (array) => {
-      list = await this.createMovieList(array.results);
-      result = await this.getServiceInfo('', array);
+      // console.log(array);
+      const list = await this.createMovieList(array.results);
+      const result = await this.getServiceInfo('', array);
+      this.setState(() => ({
+        listRated: list,
+        ratedInfo: result,
+      }));
     });
-    this.setState(() => ({
-      listRated: list,
-      ratedInfo: result,
-    }));
   };
 
   createMovieList(array) {
@@ -185,7 +186,12 @@ export default class App extends Component {
       />
     ) : null;
     return (
-      <Tabs defaultActiveKey="1">
+      <Tabs
+        defaultActiveKey="1"
+        onChange={(activeKey) => {
+          if (+activeKey === 2) this.ratedMoviesList();
+        }}
+      >
         <TabPane tab="Search" key="1">
           <Search
             searchText={searchInfo.searchText}
