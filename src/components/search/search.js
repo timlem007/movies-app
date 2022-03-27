@@ -6,14 +6,6 @@ import debounce from 'lodash.debounce';
 import { Input } from 'antd';
 
 function Search({ inputOnChange }) {
-  // const [value, setValue] = useState('');
-  // // useEffect(() => () => setValue(''));
-
-  // const onChange = (event) => {
-  //   event.preventDefault();
-  //   setValue(event.target.value);
-  //   // inputOnChange();
-  // };
   return (
     <Input
       className="search-form"
@@ -24,14 +16,8 @@ function Search({ inputOnChange }) {
   );
 }
 
-Search.defaultProps = {
-  inputOnChange: () => {},
-  // clearInput: () => {},
-};
+Search.defaultProps = { inputOnChange: () => {} };
 
-Search.propTypes = {
-  inputOnChange: PropTypes.func,
-  // clearInput: PropTypes.func,
-};
+Search.propTypes = { inputOnChange: PropTypes.func };
 
 export default Search;
