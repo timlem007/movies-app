@@ -9,16 +9,7 @@ import {
 } from 'antd';
 
 function Movie({ element, loading, changeRated }) {
-  const ref = React.createRef();
-  // let blockHight;
-  // useEffect(() => {
-  //   const { current } = ref;
-  //   blockHight = current.offsetHeight;
-  //   // console.log(current.offsetHeight);
-  // }, []);
-
-  // console.log(blockHight);
-
+  let tagsId = 100000;
   let date = element.release_date;
   let cardImage = <img className="card-img" alt="title" src={element.photo1} />;
 
@@ -36,9 +27,6 @@ function Movie({ element, loading, changeRated }) {
   if (element.stars >= 5 && element.stars < 7) elementStarsColor = '#E9D100';
   if (element.stars >= 7) elementStarsColor = '#66E900';
 
-  // const testElement = document.getElementsByClassName('info__overview');
-  // console.log(Array.prototype.slice.call(testElement));
-  // console.log(element.overview);
   let result = '';
   let string = '';
   function updateText(width, higth, text = '') {
@@ -64,31 +52,12 @@ function Movie({ element, loading, changeRated }) {
     return result;
   }
 
-  // const updateText = (width, higth, text = '') => {
-  //   let string = '';
-  //   let result = '';
-  //   console.log(text);
-  //   const textInArray = text.split(' ');
-  //   // console.log(textInArray);
-  //   // textInArray.shift();
-  //   textInArray.forEach(() => {
-  //     // console.log(result.split('\n').length);
-  //     if (result.split('\n').length <= higth) {
-  //       if (string.length < width) {
-  //         string += `${textInArray.shift()} `;
-  //       } else {
-  //         string += '\n';
-  //         result += string;
-  //         string = `${textInArray.shift()} `;
-  //       }
-  //     }
-  //   });
-  //   console.log(textInArray);
-  //   return result;
-  // };
+  const tags = !element.genres.length ? null
+    : element.genres.map((el) => {
+      tagsId += 1;
+      return <Tag key={tagsId}>{el}</Tag>;
+    });
 
-  // console.log();
-  // console.log(ref.current.offsetHeight);
   const cardList = (
     <>
       {cardImage}
@@ -103,15 +72,8 @@ function Movie({ element, loading, changeRated }) {
           </p>
         </section>
         <p className="card-info__body info__date">{date}</p>
-        <div className="card-info__body">
-          <Tag>#2db7f5</Tag>
-          <Tag>#87d068</Tag>
-          <Tag>#108ee9</Tag>
-        </div>
-        <p
-          className="card-info__body info__overview"
-          ref={ref}
-        >
+        <div className="card-info__body">{tags}</div>
+        <p className="card-info__body info__overview">
           {updateText(35, 5, element.overview)}
         </p>
         <Rate
@@ -146,6 +108,7 @@ Movie.defaultProps = {
     id: null,
     stars: null,
     rating: 0,
+    genres: [],
   },
   loading: true,
   changeRated: () => {},
@@ -162,6 +125,7 @@ Movie.propTypes = {
     id: PropTypes.number,
     stars: PropTypes.number,
     rating: PropTypes.number,
+    genres: PropTypes.arrayOf(PropTypes.string),
   }),
   loading: PropTypes.bool,
   changeRated: PropTypes.func,

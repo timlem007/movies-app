@@ -65,6 +65,10 @@ export default class MoviesService {
     }
   };
 
+  getGenres() {
+    return this.getMovie(`/genre/movie/list?api_key=${this.keyApi}`);
+  }
+
   getSearchMovies(searchValue, page) {
     return this.getMovie(`search/movie?api_key=${this.keyApi}&query=${searchValue}&page=${page}`);
   }

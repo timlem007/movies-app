@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Pagination, Tabs } from 'antd';
 
-import 'antd/dist/antd.css';
+import 'antd/dist/antd.min.css';
 import './app.css';
 
 import MovieList from '../movie-list';
@@ -13,48 +13,31 @@ export default class App extends Component {
 
   state = {
     listInfo: [],
-    listRated: [],
-    ratedInfo: {
-      current: 1,
-      total_pages: 1,
-      loading: false,
-      error: false,
-    },
     searchInfo: {
       current: 1,
       total_pages: 1,
       loading: true,
       error: false,
     },
+    activeTab: 1,
   };
 
   componentDidMount() {
     this.Info.guestSession();
-    this.movieSearch('return');
+    this.genresKey();
+    this.getMovieList('return');
   }
 
   onChange(page) {
-    this.setState(({ searchInfo }) => {
+    this.setState(({ searchInfo, activeTab }) => {
       const newObject = { ...searchInfo };
       newObject.current = page;
       newObject.loading = true;
-      this.movieSearch(searchInfo.searchText, page);
+      if (activeTab) this.getMovieList(newObject.searchText, page);
+      else this.getRatedMovieList(page);
       return {
         listInfo: [],
         searchInfo: newObject,
-      };
-    });
-  }
-
-  onChangeRated(page) {
-    this.setState(({ ratedInfo }) => {
-      const newObject = { ...ratedInfo };
-      newObject.current = page;
-      newObject.loading = true;
-      this.ratedMoviesList(page);
-      return {
-        listRated: [],
-        ratedInfo: newObject,
       };
     });
   }
@@ -69,8 +52,8 @@ export default class App extends Component {
       };
     });
   }
-
-  getServiceInfo(text, body) {
+  /* eslint-disable */
+  getServiceInfo(body, text = this.state.searchInfo.searchText) {
     const newInfo = {
       searchText: `${text}`,
       current: body.page,
@@ -82,14 +65,15 @@ export default class App extends Component {
     return newInfo;
   }
 
-  movieSearch = async (text, page = 1) => {
+  getMovieList = async (text, page = 1) => {
     try {
       return await this.Info.getSearchMovies(text, page).then(async (body) => {
         const list = await this.createMovieList(body.results);
-        const result = await this.getServiceInfo(text, body);
+        const result = await this.getServiceInfo(body, text);
         this.setState(() => ({
           listInfo: list,
           searchInfo: result,
+          activeTab: 1,
         }));
       });
     } catch {
@@ -100,45 +84,66 @@ export default class App extends Component {
   inputOnChange = (event) => {
     event.preventDefault();
     const text = event.target.value ? event.target.value : 'return';
-    return this.movieSearch(text);
+    return this.getMovieList(text);
   };
 
   changeRated = async (value, id) => {
     if (value === 0) return;
-    this.setState(({ listInfo, ratedInfo }) => {
+    this.setState(({ listInfo }) => {
       const newArray = [...listInfo];
-      const newObject = { ...ratedInfo };
       const idx = newArray.findIndex((el) => el.id === id);
       newArray[idx].rating = value;
-      newObject.loading = true;
       return {
         listInfo: newArray,
       };
     });
     await this.Info.postRatedMovies(id, value);
-    // await this.ratedMoviesList();
   };
 
-  ratedMoviesList = async (page = 1) => {
-    // let list;
-    // let result;
+  getRatedMovieList = async (page = 1) => {
     await this.Info.getRatedMovies(page).then(async (array) => {
-      // console.log(array);
       const list = await this.createMovieList(array.results);
-      const result = await this.getServiceInfo('', array);
+      const result = await this.getServiceInfo(array);
       this.setState(() => ({
-        listRated: list,
-        ratedInfo: result,
+        listInfo: list,
+        searchInfo: result,
+        activeTab: 0,
       }));
     });
   };
 
+  genresKey() {
+    return this.Info.getGenres().then((res) => { this.genres = Object.values(res); });
+  }
+
+  genresArrayToString(array = [], result = []) {
+    if (array.length) {
+      this.genres[0].forEach((el) => {
+        if (el.id === array[0]) {
+          result.push(el.name);
+          array.shift();
+          return this.genresArrayToString(array, result);
+        }
+        return null;
+      });
+    }
+    return result;
+  }
+
+  clearInput() {
+    this.setState(({ searchInfo }) => {
+      const newObject = { ...searchInfo };
+      newObject.searchText = '';
+      return {
+        searchInfo: newObject,
+      };
+    });
+  }
+
   createMovieList(array) {
     const urlImage = 'https://image.tmdb.org/t/p/w500';
     const stateArray = [];
-    const newArray = [...array];
-
-    newArray.forEach((el) => {
+    array.forEach((el) => {
       const newObject = {
         title: el.title,
         overview: el.overview,
@@ -149,72 +154,60 @@ export default class App extends Component {
         id: el.id,
         stars: el.vote_average,
         rating: el.rating,
+        genres: this.genresArrayToString(el.genre_ids),
       };
-      const { listRated } = this.state;
-      const idx = listRated.findIndex((element) => element.id === newObject.id);
-      if (idx >= 0) newObject.rating = listRated[idx].rating;
       stateArray.push(newObject);
     });
     return stateArray;
   }
 
   render() {
-    const {
-      listInfo, searchInfo, listRated, ratedInfo,
-    } = this.state;
-    const { TabPane } = Tabs;
-    const searchPaginData = !(searchInfo.loading || searchInfo.error) && searchInfo.total_result;
-    const ratedPaginData = !(ratedInfo.loading || ratedInfo.error) && ratedInfo.total_result;
-    const searchPagination = searchPaginData ? (
-      <Pagination
-        className="pagination"
-        current={searchInfo.current}
-        onChange={(page) => this.onChange(page)}
-        total={searchInfo.total_result}
-        defaultPageSize={20}
-        pageSizeOptions={[20]}
-      />
-    ) : null;
-    const ratedPagination = ratedPaginData ? (
-      <Pagination
-        className="pagination"
-        current={ratedInfo.current}
-        onChange={(page) => this.onChangeRated(page)}
-        total={ratedInfo.total_result}
-        defaultPageSize={20}
-        pageSizeOptions={[20]}
-      />
-    ) : null;
+    const { listInfo, searchInfo } = this.state;
+    const ratedList = (
+      <>
+        <MovieList
+          listInfo={listInfo}
+          loading={searchInfo.loading}
+          error={searchInfo.error}
+          totalResult={searchInfo.total_result}
+          changeRated={this.changeRated}
+        />
+        <Pagination
+          className="pagination"
+          current={searchInfo.current}
+          onChange={(page) => this.onChange(page)}
+          total={searchInfo.total_result}
+          defaultPageSize={20}
+          pageSizeOptions={[20]}
+        />
+      </>
+    );
+    const searchList = (
+      <>
+        <Search
+          clearInput={() => this.clearInput}
+          inputOnChange={(event) => this.inputOnChange(event)}
+        />
+        {ratedList}
+      </>
+    );
+    const searchPaginData = !(searchInfo.loading || searchInfo.error) && !!searchInfo.total_result;
+
     return (
       <Tabs
         defaultActiveKey="1"
         onChange={(activeKey) => {
-          if (+activeKey === 2) this.ratedMoviesList();
+          if (!searchInfo.total_result) {
+            const newObject = { ...searchInfo };
+            newObject.loading = true;
+            this.setState({ searchInfo: newObject });
+          }
+          return +activeKey ? this.getMovieList(searchInfo.searchText || 'return')
+            : this.getRatedMovieList();
         }}
       >
-        <TabPane tab="Search" key="1">
-          <Search
-            searchText={searchInfo.searchText}
-            inputOnChange={(event) => this.inputOnChange(event)}
-          />
-          <MovieList
-            listInfo={listInfo}
-            loading={searchInfo.loading}
-            error={searchInfo.error}
-            totalResult={searchInfo.total_result}
-            changeRated={this.changeRated}
-          />
-          {searchPagination}
-        </TabPane>
-        <TabPane tab="Rated" key="2">
-          <MovieList
-            listInfo={listRated}
-            loading={ratedInfo.loading}
-            error={ratedInfo.error}
-            totalResult={ratedInfo.total_result}
-          />
-          {ratedPagination}
-        </TabPane>
+        <Tabs.TabPane tab="Search" key="1">{searchList || searchPaginData}</Tabs.TabPane>
+        <Tabs.TabPane tab="Rated" key="0">{ratedList || searchPaginData}</Tabs.TabPane>
       </Tabs>
     );
   }
