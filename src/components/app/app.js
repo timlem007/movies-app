@@ -7,6 +7,7 @@ import './app.css';
 import MovieList from '../movie-list';
 import Search from '../search';
 import MoviesService from '../../services/movies-service';
+import GenresContext from '../genres-context';
 
 export default class App extends Component {
   Info = new MoviesService();
@@ -116,20 +117,6 @@ export default class App extends Component {
     return this.Info.getGenres().then((res) => { this.genres = Object.values(res); });
   }
 
-  genresArrayToString(array = [], result = []) {
-    if (array.length) {
-      this.genres[0].forEach((el) => {
-        if (el.id === array[0]) {
-          result.push(el.name);
-          array.shift();
-          return this.genresArrayToString(array, result);
-        }
-        return null;
-      });
-    }
-    return result;
-  }
-
   clearInput() {
     this.setState(({ searchInfo }) => {
       const newObject = { ...searchInfo };
@@ -154,7 +141,7 @@ export default class App extends Component {
         id: el.id,
         stars: el.vote_average,
         rating: el.rating,
-        genres: this.genresArrayToString(el.genre_ids),
+        genres: el.genre_ids,
       };
       stateArray.push(newObject);
     });
@@ -194,6 +181,7 @@ export default class App extends Component {
     const searchPaginData = !(searchInfo.loading || searchInfo.error) && !!searchInfo.total_result;
 
     return (
+      <GenresContext.Provider value={this.genres}>
       <Tabs
         defaultActiveKey="1"
         onChange={(activeKey) => {
@@ -209,6 +197,7 @@ export default class App extends Component {
         <Tabs.TabPane tab="Search" key="1">{searchList || searchPaginData}</Tabs.TabPane>
         <Tabs.TabPane tab="Rated" key="0">{ratedList || searchPaginData}</Tabs.TabPane>
       </Tabs>
+      </GenresContext.Provider>
     );
   }
 }

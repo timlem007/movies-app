@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import format from 'date-fns/format';
 
@@ -7,6 +7,8 @@ import './movie.css';
 import {
   Tag, Rate, Spin, Alert,
 } from 'antd';
+
+import GenresContext from '../genres-context';
 
 function Movie({ element, loading, changeRated }) {
   let tagsId = 100000;
@@ -52,11 +54,25 @@ function Movie({ element, loading, changeRated }) {
     return result;
   }
 
-  const tags = !element.genres.length ? null
-    : element.genres.map((el) => {
+  const genres = useContext(GenresContext);
+  const genresResult = (array = [], res = []) => {
+    if (array.length) {
+      genres[0].forEach((el) => {
+        if (el.id === array[0]) {
+          res.push(el.name);
+          array.shift();
+          return genresResult(array, res);
+        }
+        return null;
+      });
+    }
+    return res.map((el) => {
       tagsId += 1;
       return <Tag key={tagsId}>{el}</Tag>;
     });
+  };
+
+  const tags = !element.genres.length ? null : genresResult(element.genres);
 
   const cardList = (
     <>
@@ -125,7 +141,7 @@ Movie.propTypes = {
     id: PropTypes.number,
     stars: PropTypes.number,
     rating: PropTypes.number,
-    genres: PropTypes.arrayOf(PropTypes.string),
+    genres: PropTypes.arrayOf(PropTypes.number),
   }),
   loading: PropTypes.bool,
   changeRated: PropTypes.func,

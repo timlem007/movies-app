@@ -12,13 +12,10 @@ function MovieList({
     <Movie loading={loading} element={element} key={element.id} changeRated={changeRated} />
   ));
 
-  let result;
-  if (!(loading || error) && totalResult) result = <ul className="card-list">{createLi}</ul>;
-  if (!(loading || error) && !totalResult) result = <Alert className="alert-error" message="No result" type="error" />;
-  if (loading) result = <Spin className="card-spinner" tip="Loading..." size="large" />;
-  if (error) result = <Alert className="alert-error" message="Fetch Error" type="error" />;
-
-  return (result);
+  if (!(loading || error) && totalResult) return <ul className="card-list">{createLi}</ul>;
+  if (!(loading || error) && !totalResult) return <Alert className="alert-error" message="No result" type="error" />;
+  if (loading) return <Spin className="card-spinner" tip="Loading..." size="large" />;
+  if (error) return <Alert className="alert-error" message="Fetch Error" type="error" />;
 }
 
 MovieList.defaultProps = {
